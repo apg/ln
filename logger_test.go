@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func setup(t *testing.T) (*bytes.Buffer, func()) {
-	out := bytes.Buffer{}
+func setup() (*bytes.Buffer, func()) {
+	var out bytes.Buffer
 	oldFilters := DefaultLogger.Filters
 	DefaultLogger.Filters = []Filter{NewWriterFilter(&out, nil)}
 	return &out, func() {
@@ -17,7 +17,7 @@ func setup(t *testing.T) (*bytes.Buffer, func()) {
 }
 
 func TestSimpleError(t *testing.T) {
-	out, teardown := setup(t)
+	out, teardown := setup()
 	defer teardown()
 
 	Info(F{"err": fmt.Errorf("This is an Error!!!")}, "fooey", F{"bar": "foo"})
@@ -35,7 +35,7 @@ func TestSimpleError(t *testing.T) {
 }
 
 func TestTimeConversion(t *testing.T) {
-	out, teardown := setup(t)
+	out, teardown := setup()
 	defer teardown()
 
 	var zeroTime time.Time
@@ -53,12 +53,11 @@ func TestTimeConversion(t *testing.T) {
 }
 
 func TestDebug(t *testing.T) {
-	out, teardown := setup(t)
+	out, teardown := setup()
 	defer teardown()
 
 	oldPri := DefaultLogger.Pri
 	defer func() { DefaultLogger.Pri = oldPri }()
-
 
 	// set priority to Debug
 	DefaultLogger.Pri = PriDebug
@@ -79,7 +78,7 @@ func TestDebug(t *testing.T) {
 }
 
 func TestFer(t *testing.T) {
-	out, teardown := setup(t)
+	out, teardown := setup()
 	defer teardown()
 
 	underTest := foobar{Foo: 1, Bar: "quux"}
@@ -103,7 +102,7 @@ type foobar struct {
 }
 
 func (f foobar) F() map[string]interface{} {
-	return map[string]interface{} {
+	return map[string]interface{}{
 		"foo": f.Foo,
 		"bar": f.Bar,
 	}
