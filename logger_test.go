@@ -2,12 +2,17 @@ package ln
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"testing"
 	"time"
 )
 
+var ctx context.Context
+
 func setup() (*bytes.Buffer, func()) {
+	ctx = context.Background()
+
 	var out bytes.Buffer
 	oldFilters := DefaultLogger.Filters
 	DefaultLogger.Filters = []Filter{NewWriterFilter(&out, nil)}
@@ -20,7 +25,7 @@ func TestSimpleError(t *testing.T) {
 	out, teardown := setup()
 	defer teardown()
 
-	Info(F{"err": fmt.Errorf("This is an Error!!!")}, "fooey", F{"bar": "foo"})
+	Info(ctx, F{"err": fmt.Errorf("This is an Error!!!")}, "fooey", F{"bar": "foo"})
 	data := []string{
 		`err="This is an Error!!!"`,
 		`fooey`,
@@ -40,7 +45,7 @@ func TestTimeConversion(t *testing.T) {
 
 	var zeroTime time.Time
 
-	Info(F{"zero": zeroTime})
+	Info(ctx, F{"zero": zeroTime})
 	data := []string{
 		`zero=0001-01-01T00:00:00Z`,
 	}
@@ -61,7 +66,7 @@ func TestDebug(t *testing.T) {
 
 	// set priority to Debug
 	DefaultLogger.Pri = PriDebug
-	Debug(F{"err": fmt.Errorf("This is an Error!!!")})
+	Debug(ctx, F{"err": fmt.Errorf("This is an Error!!!")})
 
 	data := []string{
 		`err="This is an Error!!!"`,
@@ -83,7 +88,7 @@ func TestFer(t *testing.T) {
 
 	underTest := foobar{Foo: 1, Bar: "quux"}
 
-	Info(underTest)
+	Info(ctx, underTest)
 	data := []string{
 		`foo=1`,
 		`bar=quux`,
