@@ -1,6 +1,7 @@
 package ln
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"time"
@@ -109,7 +110,7 @@ type Event struct {
 }
 
 // Log is the generic logging method.
-func (l *Logger) Log(p Priority, xs ...interface{}) {
+func (l *Logger) Log(ctx context.Context, p Priority, xs ...interface{}) {
 	if l.Pri < p {
 		return // don't log
 	}
@@ -151,95 +152,95 @@ func (l *Logger) Log(p Priority, xs ...interface{}) {
 		event.Data["_filename"] = frame.filename
 	}
 
-	l.filter(event)
+	l.filter(ctx, event)
 }
 
-func (l *Logger) filter(e Event) {
+func (l *Logger) filter(ctx context.Context, e Event) {
 	for _, f := range l.Filters {
-		if !f.Apply(e) {
+		if !f.Apply(ctx, e) {
 			return
 		}
 	}
 }
 
 // Emergency sets the priority of this event to PriEmergency
-func (l *Logger) Emergency(xs ...interface{}) {
-	l.Log(PriEmergency, xs...)
+func (l *Logger) Emergency(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriEmergency, xs...)
 }
 
 // Alert sets the priority of this event to PriAlert
-func (l *Logger) Alert(xs ...interface{}) {
-	l.Log(PriAlert, xs...)
+func (l *Logger) Alert(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriAlert, xs...)
 }
 
 // Critical sets the priority of this event to PriCritical
-func (l *Logger) Critical(xs ...interface{}) {
-	l.Log(PriCritical, xs...)
+func (l *Logger) Critical(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriCritical, xs...)
 }
 
 // Error sets the priority of this event to PriError
-func (l *Logger) Error(xs ...interface{}) {
-	l.Log(PriError, xs...)
+func (l *Logger) Error(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriError, xs...)
 }
 
 // Warning sets the priority of this event to PriWarning
-func (l *Logger) Warning(xs ...interface{}) {
-	l.Log(PriWarning, xs...)
+func (l *Logger) Warning(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriWarning, xs...)
 }
 
 // Notice sets the priority of this event to PriNotice
-func (l *Logger) Notice(xs ...interface{}) {
-	l.Log(PriNotice, xs...)
+func (l *Logger) Notice(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriNotice, xs...)
 }
 
 // Info sets the priority of this event to PriInfo
-func (l *Logger) Info(xs ...interface{}) {
-	l.Log(PriInfo, xs...)
+func (l *Logger) Info(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriInfo, xs...)
 }
 
 // Debug sets the priority of this event to PriDebug
-func (l *Logger) Debug(xs ...interface{}) {
-	l.Log(PriDebug, xs...)
+func (l *Logger) Debug(ctx context.Context, xs ...interface{}) {
+	l.Log(ctx, PriDebug, xs...)
 }
 
 // Default Implementation
 
 // Emergency sets the priority of this event to PriEmergency
-func Emergency(xs ...interface{}) {
-	DefaultLogger.Log(PriEmergency, xs...)
+func Emergency(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriEmergency, xs...)
 }
 
 // Alert sets the priority of this event to PriAlert
-func Alert(xs ...interface{}) {
-	DefaultLogger.Log(PriAlert, xs...)
+func Alert(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriAlert, xs...)
 }
 
 // Critical sets the priority of this event to PriCritical
-func Critical(xs ...interface{}) {
-	DefaultLogger.Log(PriCritical, xs...)
+func Critical(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriCritical, xs...)
 }
 
 // Error sets the priority of this event to PriError
-func Error(xs ...interface{}) {
-	DefaultLogger.Log(PriError, xs...)
+func Error(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriError, xs...)
 }
 
 // Warning sets the priority of this event to PriWarning
-func Warning(xs ...interface{}) {
-	DefaultLogger.Log(PriWarning, xs...)
+func Warning(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriWarning, xs...)
 }
 
 // Notice sets the priority of this event to PriNotice
-func Notice(xs ...interface{}) {
-	DefaultLogger.Log(PriNotice, xs...)
+func Notice(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriNotice, xs...)
 }
 
 // Info sets the priority of this event to PriInfo
-func Info(xs ...interface{}) {
-	DefaultLogger.Log(PriInfo, xs...)
+func Info(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriInfo, xs...)
 }
 
 // Debug sets the priority of this event to PriDebug
-func Debug(xs ...interface{}) {
-	DefaultLogger.Log(PriDebug, xs...)
+func Debug(ctx context.Context, xs ...interface{}) {
+	DefaultLogger.Log(ctx, PriDebug, xs...)
 }
